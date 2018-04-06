@@ -1,12 +1,32 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom';
+import { ApolloProvider } from 'react-apollo';
 import { Meteor } from 'meteor/meteor';
+import { ApolloClient } from 'apollo-client';
+import { HttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 
-const App = () => <h1>FUCK</h1>;
+import App from '../../ui/App';
 
-Meteor.startup (() => {
-render(
-  <App />,
-  document.getElementById('app')
-  )
+const httpLink = new HttpLink({
+  uri: Meteor.absoluteUrl('graphql')
+});
+
+const cache = new InMemoryCache();
+const client = new ApolloClient({
+  link: httpLink,
+  cache
+});
+
+const ApolloApp = () => (
+  <ApolloProvider client={client}>
+    <App />
+  </ApolloProvider>
+);
+
+Meteor.startup(() => {
+  render(
+      <ApolloApp />,
+      document.getElementById('app')
+    )
 });
