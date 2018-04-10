@@ -1,0 +1,8 @@
+#  Schema for users
+
+type User {
+  _id: String
+  email: String
+}
+
+
